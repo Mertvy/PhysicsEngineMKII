@@ -17,7 +17,7 @@ link_directories(./lib)
 
 file(GLOB_RECURSE SOURCES 
 	"src/*.cpp" 
-	"src/Utils/Math/*.cpp" 
+	"src/Util/Math/*.cpp" 
 	"src/Render/*.cpp" 
 	"src/Physics/*.cpp"
 	"src/include/imgui/*.cpp"
