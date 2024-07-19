@@ -1,69 +1,71 @@
 #include "Vector.h"
 #include <math.h>
 #include <stdexcept>
+#include <vector>
 
+using std::vector;
 
-Vector::Vector(int size, double* arr) {
-	this->size = size;
-	if (arr == nullptr)
-		this->arr = new double[size];
-	else this->arr = arr;
+Vector::Vector(vector<double> vec) {
+	this->size = vec.size();
+	this->vec = vec;
 
 	double mag = 0;
-	for (int i = 0; i < size; i++) mag += pow(this->arr[i], 2);
+	for (int i = 0; i < size; i++) mag += pow(vec[i], 2);
 	this->magnitude = pow(mag, 0.5);
 }
 
-Vector::~Vector() {
-	delete[] arr;
+double Vector::operator[](int i) const {
+	return vec[i];
 }
+
 
 Vector Vector::operator+(const Vector other) const {
 	if (size != other.size) throw std::invalid_argument("Vectors must be same dimension for addition");
-	double* newArr = new double[size];
-	for (int i = 0; i < size; i++) newArr[i] = arr[i] + other.arr[i];
 
-	return Vector(size, newArr);
+	vector<double> newVec = vector<double>(size);
+	for (int i = 0; i < size; i++) newVec[i] = vec[i] + other.vec[i];
+
+	return Vector(newVec);
 }
 
 Vector Vector::operator-(const Vector other) const {
 	if (size != other.size) throw std::invalid_argument("Vectors must be same dimension for subtraction");
-	double* newArr = new double[size];
-	for (int i = 0; i < size; i++) newArr[i] = arr[i] - other.arr[i];
+	vector<double> newVec = vector<double>(size);
+	for (int i = 0; i < size; i++) newVec[i] = vec[i] - other.vec[i];
 
-	return Vector(size, newArr);
+	return Vector(newVec);
 }
 
 Vector Vector::operator*(const double scalar) const {
-	double* newArr = new double[size];
-	for (int i = 0; i < size; i++) newArr[i] = arr[i] * scalar;
+	vector<double> newVec = vector<double>(size);
+	for (int i = 0; i < size; i++) newVec[i] = vec[i] * scalar;
 
-	return Vector(size, newArr);
+	return Vector(newVec);
 }
 
 double Vector::operator*(const Vector other) const {
 	if (size != other.size) throw std::invalid_argument("Vectors must be same dimension for dot product");
 	double dotProd = 0;
-	for (int i = 0; i < size; i++) dotProd += arr[i] + other.arr[i];
+	for (int i = 0; i < size; i++) dotProd += vec[i] * other.vec[i];
 
 	return dotProd;
 }
 
-Vector Vector::operatorx(const Vector other) const {
+Vector Vector::operator&(const Vector other) const {
 	if (size != 3 || other.size != 3) throw std::invalid_argument("Vectors must be dimension 3 for cross product");
-	double* newArr = new double[3];
-	double x1 = arr[0], y1 = arr[1], z1 = arr[2];
-	double x2 = other.arr[0], y2 = other.arr[1], z2 = other.arr[2];
+	vector<double> newVec = vector<double>(size);
+	double x1 = vec[0], y1 = vec[1], z1 = vec[2];
+	double x2 = other.vec[0], y2 = other.vec[1], z2 = other.vec[2];
 
-	newArr[0] = y1 * z2 - z1 * y2;
-	newArr[1] = x1 * z2 - z1 * x2;
-	newArr[2] = x1 * y2 - y1 * x2;
+	newVec[0] = y1 * z2 - z1 * y2;
+	newVec[1] = -x1 * z2 + z1 * x2;
+	newVec[2] = x1 * y2 - y1 * x2;
 
-	return Vector(size, newArr);
+	return Vector(newVec);
 }
 
 Vector Vector::proj(const Vector v) const {
 	if (size != v.size) throw std::invalid_argument("Vectors must be same dimension for projection");
-	double scalar = ((*this) * v) / pow(v.magnitude, 2);
+	double scalar = ((*this) * v) / pow((*this).magnitude, 2);
 	return (*this) * scalar;
 }

@@ -1,8 +1,7 @@
-﻿// PhysicsEngineMKII.cpp : Defines the entry point for the application.
+﻿﻿// PhysicsEngineMKII.cpp : Defines the entry point for the application.
 //
 
-#include <glad/glad.h>
-#include <KHR/khrplatform.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include "imgui/imgui.h"
