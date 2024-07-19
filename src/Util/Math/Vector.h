@@ -11,14 +11,16 @@ public:
 
 	~Vector();
 
-	Vector operator+(const Vector& other) const;
+	Vector operator+(const Vector other) const;
 
-	Vector operator-(const Vector& other) const;
+	Vector operator-(const Vector other) const;
 
 	Vector operator*(const double scalar) const;
 
-	Vector operator*(const Vector& other) const;
+	double operator*(const Vector other) const;
 
-	Vector operatorx(const Vector& other) const;
+	Vector operatorx(const Vector other) const;
+
+	Vector proj(const Vector v) const;
 
 };
