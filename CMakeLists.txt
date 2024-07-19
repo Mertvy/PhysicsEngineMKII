@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.10)
 project(PhysicsEngine2 VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #if on linux/mac
@@ -23,6 +23,7 @@ link_directories(./lib)
 
 #compile and link against these
 set(SOURCES
+	./include/glad/glad.c
 	./include/imgui/backends/imgui_impl_glfw.cpp
 	./include/imgui/backends/imgui_impl_opengl3.cpp
 	./include/imgui/imgui.cpp
@@ -36,4 +37,5 @@ set(SOURCES
 
 
 add_executable(PhysicsEngine2 ${SOURCES})
-target_link_libraries(PhysicsEngine2 ${OPENGL_LIBRARIES} glfw3 glew32)
+target_link_libraries(PhysicsEngine2 ${OPENGL_LIBRARIES} glfw3)
+
