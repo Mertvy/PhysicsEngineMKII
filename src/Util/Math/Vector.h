@@ -1,15 +1,18 @@
 #include <math.h>
 #include <stdexcept>
+#include <vector>
+
+using std::vector;
 
 class Vector {
 public:
 	int size;
-	double* arr;
+	vector<double> vec;
 	double magnitude;
 
-	Vector(int size, double* arr = nullptr);
+	Vector(vector<double> vec);
 
-	~Vector();
+	double operator[](int i) const;
 
 	Vector operator+(const Vector other) const;
 
@@ -19,7 +22,7 @@ public:
 
 	double operator*(const Vector other) const;
 
-	Vector operatorx(const Vector other) const;
+	Vector operator&(const Vector other) const;
 
 	Vector proj(const Vector v) const;
 
