@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 
-Vector::Vector(int size, double* arr = nullptr) {
+Vector::Vector(int size, double* arr) {
 	this->size = size;
 	if (arr == nullptr)
 		this->arr = new double[size];
