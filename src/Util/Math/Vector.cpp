@@ -22,7 +22,7 @@ double Vector::operator[](int i) const {
 Vector Vector::operator+(const Vector other) const {
 	if (size != other.size) throw std::invalid_argument("Vectors must be same dimension for addition");
 
-	vector<double> newVec = vector<double>(size); 
+	vector<double> newVec = vector<double>(size);
 	for (int i = 0; i < size; i++) newVec[i] = vec[i] + other.vec[i];
 
 	return Vector(newVec);
