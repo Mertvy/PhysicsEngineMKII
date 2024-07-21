@@ -1,7 +1,8 @@
-﻿﻿// PhysicsEngineMKII.cpp : Defines the entry point for the application.
+﻿// PhysicsEngineMKII.cpp : Defines the entry point for the application.
 //
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+#include <KHR/khrplatform.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include "imgui/imgui.h"
@@ -9,6 +10,8 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include <iostream>
 #include <string>
+#include <math.h>
+#include <vector>
 
 
 static void glfw_error_callback(int error, const char* description);
@@ -16,8 +19,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 
-static unsigned int CompileShader(unsigned int type, const std::string& source);
-static unsigned int CreateShader(const std::string& vert, const std::string& frag);
+static unsigned int compileShader(unsigned int type, const std::string& source);
+static unsigned int createShader(const std::string& vert, const std::string& frag);
 
 
 int main()
@@ -62,20 +65,21 @@ void main() {
 	std::string fs = R"(
 	#version 330 core
 
+uniform float time;
 out vec4 color; 
 
 void main() {
-	color = vec4(0.0,1.0,0.5,1.0);
+	color = vec4(1.0,1.0,1.0,1.0);
 })";
 
-	static unsigned int test = CreateShader(vs, fs);
-
+	static unsigned int test = createShader(vs, fs);
 
 	float vertices[] = {
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.0f, 0.5f
+		0.0f,0.5f,
+		-0.5,-0.5f,
+		0.5f,-0.5f
 	};
+
 	unsigned int vbo, vao;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -86,6 +90,7 @@ void main() {
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	float startTime = glfwGetTime(); // Or any other method to get the current time
 
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0, 0.0, 0.5, 0.0);
@@ -93,7 +98,8 @@ void main() {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-	
+		float currentTime = glfwGetTime();
+
 	
 		{
 			ImGui::Begin("Test");
@@ -102,6 +108,8 @@ void main() {
 		ImGui::ShowDemoWindow();
 		
 		glUseProgram(test);
+		glUniform1f(glGetUniformLocation(test, "time"), currentTime);
+
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
@@ -141,7 +149,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-static unsigned int CompileShader(unsigned int type, const std::string& source) {
+static unsigned int compileShader(unsigned int type, const std::string& source) {
 	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
@@ -158,15 +166,13 @@ static unsigned int CompileShader(unsigned int type, const std::string& source) 
 		glDeleteShader(id);
 		return -1;
 	}
-
-
 	return id;
 }
 
-static unsigned int CreateShader(const std::string& vert, const std::string& frag) {
+static unsigned int createShader(const std::string& vert, const std::string& frag) {
 	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vert);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, frag);
+	unsigned int vs = compileShader(GL_VERTEX_SHADER, vert);
+	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, frag);
 
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
